@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.exaper.launcher.R
 import com.exaper.launcher.databinding.MainFragmentBinding
 import com.exaper.launcher.viewmodel.LauncherViewModel
@@ -19,6 +20,8 @@ class LauncherFragment : Fragment(R.layout.main_fragment) {
         binding = MainFragmentBinding.bind(view)
         val adapter = LaunchablesAdapter()
         binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.launchable_columns))
+
         viewModel.launchables.observe(viewLifecycleOwner) { launchables ->
             adapter.items = launchables
         }

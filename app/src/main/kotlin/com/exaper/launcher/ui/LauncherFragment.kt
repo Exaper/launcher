@@ -17,10 +17,11 @@ class LauncherFragment : Fragment(R.layout.main_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = MainFragmentBinding.bind(view)
         val adapter = LaunchablesAdapter()
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.launchable_columns))
+        binding = MainFragmentBinding.bind(view).apply {
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.launchable_columns))
+        }
 
         viewModel.launchables.observe(viewLifecycleOwner) { launchables ->
             adapter.items = launchables

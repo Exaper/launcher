@@ -1,8 +1,11 @@
-package com.exaper.launcher
+package com.exaper.launcher.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.exaper.launcher.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LauncherActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

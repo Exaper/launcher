@@ -1,5 +1,5 @@
 # Launcher
-Custom Launcher
+Sample implementation of Android's Custom Applications Launcher
 
 # Installation
 1 Install through ADB.

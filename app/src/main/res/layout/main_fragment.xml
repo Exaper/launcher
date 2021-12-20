@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.LauncherFragment">
@@ -12,6 +11,11 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/padding_x3"
+        android:paddingBottom="@dimen/padding_x4"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="@integer/apps_grid_columns"
+        tools:listitem="@layout/launchable" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

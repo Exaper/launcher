@@ -18,9 +18,9 @@ class LauncherFragment : Fragment(R.layout.main_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = LaunchablesAdapter()
+
         binding = MainFragmentBinding.bind(view).apply {
             recyclerView.adapter = adapter
-            recyclerView.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.launchable_columns))
         }
 
         viewModel.launchables.observe(viewLifecycleOwner) { launchables ->

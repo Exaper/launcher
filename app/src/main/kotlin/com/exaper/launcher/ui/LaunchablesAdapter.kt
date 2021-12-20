@@ -23,8 +23,8 @@ class LaunchablesAdapter : RecyclerView.Adapter<LaunchablesAdapter.LaunchableVie
 
     inner class LaunchableViewHolder(private val binding: LaunchableBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindTo(launchable: Launchable) = with(binding) {
-            text.text = launchable.name
-            image.setImageDrawable(launchable.icon)
+            iconImageView.setImageDrawable(launchable.icon)
+            labelTextView.text = launchable.name
         }
     }
 

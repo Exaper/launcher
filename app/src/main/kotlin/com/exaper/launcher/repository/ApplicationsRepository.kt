@@ -16,11 +16,9 @@ import javax.inject.Singleton
 @Singleton
 class ApplicationsRepository @Inject constructor(@ApplicationContext private val context: Context) {
     private val _launchablesFlow = MutableSharedFlow<List<Launchable>>(replay = 1)
-    val launchables: Flow<List<Launchable>> = _launchablesFlow.asSharedFlow().onSubscription {
-        registerPackageUpdatesReceiver()
-    }.onCompletion {
-        unregisterPackageUpdatesReceiver()
-    }
+    val launchables: Flow<List<Launchable>> = _launchablesFlow
+        .onSubscription { registerPackageUpdatesReceiver() }
+        .onCompletion { unregisterPackageUpdatesReceiver() }
 
     private val packageUpdatesBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -36,7 +34,7 @@ class ApplicationsRepository @Inject constructor(@ApplicationContext private val
         }
     }
 
-    suspend fun loadApplications() = withContext(IO) { // Loading icon/label from other apps will take time.
+    suspend fun loadApplications() = withContext(IO) { // Loading icon/label for all apps will take time.
         val launchables = mutableListOf<Launchable>()
         val pm = context.packageManager
         pm.queryIntentActivities(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), 0).forEach {

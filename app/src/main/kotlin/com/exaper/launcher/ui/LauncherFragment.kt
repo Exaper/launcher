@@ -18,6 +18,9 @@ class LauncherFragment : Fragment(R.layout.main_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = LaunchablesAdapter()
+        adapter.onItemClicked = {
+            startActivity(it.launchIntent)
+        }
 
         binding = MainFragmentBinding.bind(view).apply {
             recyclerView.adapter = adapter

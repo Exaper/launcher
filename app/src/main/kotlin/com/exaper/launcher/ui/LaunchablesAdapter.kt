@@ -14,6 +14,8 @@ class LaunchablesAdapter : RecyclerView.Adapter<LaunchablesAdapter.LaunchableVie
             field = value
         }
 
+    var onItemClicked: (Launchable) -> (Unit) = {}
+
     override fun getItemCount() = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -25,6 +27,7 @@ class LaunchablesAdapter : RecyclerView.Adapter<LaunchablesAdapter.LaunchableVie
         fun bindTo(launchable: Launchable) = with(binding) {
             iconImageView.setImageDrawable(launchable.icon)
             labelTextView.text = launchable.name
+            root.setOnClickListener { onItemClicked(launchable) }
         }
     }
 

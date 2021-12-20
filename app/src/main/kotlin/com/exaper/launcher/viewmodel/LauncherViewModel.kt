@@ -15,8 +15,7 @@ class LauncherViewModel @Inject constructor(repository: ApplicationsRepository) 
 
     init {
         viewModelScope.launch {
-            repository.refreshApplications()
+            repository.loadApplications()
         }
     }
-
 }

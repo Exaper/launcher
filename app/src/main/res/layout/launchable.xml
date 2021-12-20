@@ -4,22 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_x2"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:clickable="true"
+    android:focusable="true"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/padding_x2">
 
     <ImageView
         android:id="@+id/iconImageView"
         android:layout_width="@dimen/app_icon_size"
         android:layout_height="@dimen/app_icon_size"
-        tools:src="@mipmap/ic_launcher"/>
+        tools:src="@mipmap/ic_launcher" />
 
     <TextView
-        style="@style/ApplicationLabel"
         android:id="@+id/labelTextView"
-        android:layout_marginTop="@dimen/padding"
-        android:layout_gravity="center_horizontal"
+        style="@style/ApplicationLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="@string/app_name"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/padding"
+        tools:text="@string/app_name" />
 </LinearLayout>

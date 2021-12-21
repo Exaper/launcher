@@ -5,18 +5,22 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.exaper.launcher.R
-import com.exaper.launcher.databinding.MainFragmentBinding
+import com.exaper.launcher.databinding.FragmentLauncherBinding
 import com.exaper.launcher.viewmodel.LauncherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LauncherFragment : Fragment(R.layout.main_fragment) {
-    private lateinit var binding: MainFragmentBinding
+class LauncherFragment : Fragment(R.layout.fragment_launcher) {
+    private lateinit var binding: FragmentLauncherBinding
     private val viewModel by viewModels<LauncherViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = LaunchablesAdapter()
+        binding = FragmentLauncherBinding.bind(view).apply {
+            recyclerView.adapter = adapter
+        }
+
         adapter.onItemClicked = {
             if (it.restricted) {
                 showRestrictedApplicationDialog()
@@ -25,18 +29,11 @@ class LauncherFragment : Fragment(R.layout.main_fragment) {
             }
         }
 
-        binding = MainFragmentBinding.bind(view).apply {
-            recyclerView.adapter = adapter
-        }
-
-        viewModel.launchables.observe(viewLifecycleOwner) { launchables ->
-            adapter.items = launchables
-        }
+        viewModel.launchables.observe(viewLifecycleOwner) { adapter.items = it }
     }
 
-    private fun showRestrictedApplicationDialog() {
+    private fun showRestrictedApplicationDialog() =
         RestrictedApplicationDialogFragment().show(childFragmentManager, RestrictedApplicationDialogFragment.TAG)
-    }
 
     companion object {
         fun newInstance() = LauncherFragment()

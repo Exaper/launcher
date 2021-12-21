@@ -50,15 +50,7 @@ class LaunchablesAdapter : RecyclerView.Adapter<LaunchablesAdapter.LaunchableVie
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
             oldList[oldItemPosition].pkg == newList[newItemPosition].pkg
 
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldItem = oldList[oldItemPosition]
-            val newItem = newList[newItemPosition]
-            return oldList[oldItemPosition] == newList[newItemPosition]
-//            oldItem.name == newItem.name && oldItem.icon == newItem.icon && oldItem.launchIntent == newItem
-//                    .launchIntent
-//                    && oldItem.restricted == newItem.restricted
-        }
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+            oldList[oldItemPosition] == newList[newItemPosition]
     }
-
-
 }

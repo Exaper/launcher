@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
 import com.exaper.launcher.R
 import com.exaper.launcher.databinding.MainFragmentBinding
 import com.exaper.launcher.viewmodel.LauncherViewModel
@@ -19,7 +18,11 @@ class LauncherFragment : Fragment(R.layout.main_fragment) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = LaunchablesAdapter()
         adapter.onItemClicked = {
-            startActivity(it.launchIntent)
+            if (it.restricted) {
+                showRestrictedApplicationDialog()
+            } else {
+                startActivity(it.launchIntent)
+            }
         }
 
         binding = MainFragmentBinding.bind(view).apply {
@@ -29,6 +32,10 @@ class LauncherFragment : Fragment(R.layout.main_fragment) {
         viewModel.launchables.observe(viewLifecycleOwner) { launchables ->
             adapter.items = launchables
         }
+    }
+
+    private fun showRestrictedApplicationDialog() {
+        RestrictedApplicationDialogFragment().show(childFragmentManager, RestrictedApplicationDialogFragment.TAG)
     }
 
     companion object {

@@ -4,9 +4,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.exaper.launcher.api.PolicyApiClient
 import com.exaper.launcher.data.Launchable
+import com.exaper.launcher.data.PolicyDao
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -14,11 +19,22 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ApplicationsRepository @Inject constructor(@ApplicationContext private val context: Context) {
+class ApplicationsRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val policyDao: PolicyDao,
+    private val apiClient: PolicyApiClient
+) {
     private val _launchablesFlow = MutableSharedFlow<List<Launchable>>(replay = 1)
-    val launchables: Flow<List<Launchable>> = _launchablesFlow
+
+    private val policies
+        get() = policyDao.getDenyList().map { it.map { it.packageName }.toSet() } // Set will offer O(1) policy lookups.
+
+    val launchables = _launchablesFlow
         .onSubscription { registerPackageUpdatesReceiver() }
         .onCompletion { unregisterPackageUpdatesReceiver() }
+        .combine(policies) { appsList, denySet ->
+            appsList.map { it.copy(restricted = denySet.contains(it.pkg)) }
+        }
 
     private val packageUpdatesBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -34,7 +50,11 @@ class ApplicationsRepository @Inject constructor(@ApplicationContext private val
         }
     }
 
-    suspend fun loadApplications() = withContext(IO) { // Loading icon/label for all apps will take time.
+    suspend fun update() = coroutineScope {
+        awaitAll(async { loadApplications() }, async { refreshPolicy() }) // Build apps and refresh policy in parallel.
+    }
+
+    private suspend fun loadApplications() = withContext(IO) { // Loading icon/label for all apps will take time.
         val launchables = mutableListOf<Launchable>()
         val pm = context.packageManager
         pm.queryIntentActivities(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), 0).forEach {
@@ -44,6 +64,10 @@ class ApplicationsRepository @Inject constructor(@ApplicationContext private val
                 _launchablesFlow.emit(ArrayList(launchables)) // Ensure internal list stays with us.
             }
         }
+    }
+
+    private suspend fun refreshPolicy() {
+        apiClient.getDenyList().onSuccess { policyDao.replaceDenyListWith(it) }
     }
 
     private fun onPackageAdded(packageName: String) {

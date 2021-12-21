@@ -9,13 +9,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LauncherViewModel @Inject constructor(repository: ApplicationsRepository) : ViewModel() {
+class LauncherViewModel @Inject constructor(
+    applicationsRepository: ApplicationsRepository
+) : ViewModel() {
 
-    val launchables = repository.launchables.asLiveData()
+    val launchables = applicationsRepository.launchables.asLiveData()
 
     init {
-        viewModelScope.launch {
-            repository.loadApplications()
-        }
+        viewModelScope.launch { applicationsRepository.update() }
     }
 }

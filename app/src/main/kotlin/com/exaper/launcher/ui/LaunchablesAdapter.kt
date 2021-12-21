@@ -1,5 +1,7 @@
 package com.exaper.launcher.ui
 
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -24,8 +26,17 @@ class LaunchablesAdapter : RecyclerView.Adapter<LaunchablesAdapter.LaunchableVie
     override fun onBindViewHolder(holder: LaunchableViewHolder, position: Int) = holder.bindTo(items[position])
 
     inner class LaunchableViewHolder(private val binding: LaunchableBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val grayscaleFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f) })
+
         fun bindTo(launchable: Launchable) = with(binding) {
             iconImageView.setImageDrawable(launchable.icon)
+            if (launchable.restricted) {
+                iconImageView.colorFilter = grayscaleFilter
+                iconImageView.imageAlpha = 128
+            } else {
+                iconImageView.colorFilter = null
+                iconImageView.imageAlpha = 255
+            }
             labelTextView.text = launchable.name
             root.setOnClickListener { onItemClicked(launchable) }
         }
@@ -42,7 +53,10 @@ class LaunchablesAdapter : RecyclerView.Adapter<LaunchablesAdapter.LaunchableVie
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
-            return oldItem.name == newItem.name && oldItem.icon == newItem.icon && oldItem.launchIntent == newItem.launchIntent
+            return oldList[oldItemPosition] == newList[newItemPosition]
+//            oldItem.name == newItem.name && oldItem.icon == newItem.icon && oldItem.launchIntent == newItem
+//                    .launchIntent
+//                    && oldItem.restricted == newItem.restricted
         }
     }
 

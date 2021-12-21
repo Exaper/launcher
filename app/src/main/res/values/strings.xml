@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Launcher</string>
+    <string name="dialog_restricted_application_title">Restricted Application</string>
+    <string name="dialog_restricted_application_message">Launching this application would violate the company
+        policy. Please contact system administrator for details.</string>
+    <string name="ok">OK</string>
 </resources>
